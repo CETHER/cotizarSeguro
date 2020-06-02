@@ -5,6 +5,7 @@ const formulario = document.getElementById('cotizar-seguro');
 const selectAnios = document.getElementById('anio');
 const marca = document.getElementById('marca');
 const anio = document.getElementById('anio');
+const resultado = document.getElementById('resultado');
 
 //Event listeners
 
@@ -75,19 +76,45 @@ function Interfaz() { }
 //Mensaje que imprime en el HTML
 Interfaz.prototype.mostrarError = function(mensaje, tipo) {
   const div = document.createElement('div');
-
   if (tipo === 'error') {
     div.classList.add('mensaje', 'error');
   } else {
     div.classList.add('mensaje', 'correcto');
   }
-
   div.innerHTML = `${mensaje}`;
   formulario.insertBefore(div, document.querySelector('.form-group'));
   
   setTimeout(() => {
     document.querySelector('.mensaje').remove();
   }, 3000);
+}
+
+
+//Imprime el resultado en pantalla
+Interfaz.prototype.mostrarResultado = function(seguro, total) {
+  let marca;
+  
+  switch (seguro.marca) {
+    case '1':
+      marca = 'Americano';
+      break;
+    case '2':
+      marca = 'Asiático';
+      break;
+    case '3':
+      marca = 'Europeo';
+      break;
+  }
+  const div = document.createElement('div');
+  div.innerHTML = `
+    Tu Resumen:
+    <br>Marca: ${marca}
+    <br>Año: ${seguro.anio}
+    <br>Tipo: ${seguro.tipo}
+    <br>Total: $ ${total}
+  `
+
+  resultado.appendChild(div);
 }
 
 
@@ -118,6 +145,9 @@ function enviarDatos(e) {
     
     //Cotizar el seguro
     const cantidad = seguro.cotizarSeguro();
+
+    //mostrar resultado
+    interfaz.mostrarResultado(seguro, cantidad);
     
   }
 }
