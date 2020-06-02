@@ -61,3 +61,20 @@ function Seguro(marca, anio, tipo) {
 function Interfaz() { }
 
 //Mensaje que imprime en el HTML
+
+Interfaz.prototype.mostrarError = function(mensaje, tipo) {
+  const div = document.createElement('div');
+
+  if (tipo === 'error') {
+    div.classList.add('mensaje', 'error');
+  } else {
+    div.classList.add('mensaje', 'correcto');
+  }
+
+  div.innerHTML = `${mensaje}`;
+  formulario.insertBefore(div, document.querySelector('.form-group'));
+  
+  setTimeout(() => {
+    document.querySelector('.mensaje').remove();
+  }, 3000);
+}
