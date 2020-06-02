@@ -48,6 +48,8 @@ header h1 {
 }
 .contenido-formulario {
     margin-top: 30px;
+    padding-left: 60px;
+    padding-right: 60px;
 }
 #cargando {
     text-align: center;
