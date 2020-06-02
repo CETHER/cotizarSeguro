@@ -74,7 +74,7 @@ Seguro.prototype.cotizarSeguro = function() {
 function Interfaz() { }
 
 //Mensaje que imprime en el HTML
-Interfaz.prototype.mostrarError = function(mensaje, tipo) {
+Interfaz.prototype.mostrarMensaje = function(mensaje, tipo) {
   const div = document.createElement('div');
   if (tipo === 'error') {
     div.classList.add('mensaje', 'error');
@@ -107,14 +107,18 @@ Interfaz.prototype.mostrarResultado = function(seguro, total) {
   }
   const div = document.createElement('div');
   div.innerHTML = `
-    Tu Resumen:
-    <br>Marca: ${marca}
-    <br>Año: ${seguro.anio}
-    <br>Tipo: ${seguro.tipo}
-    <br>Total: $ ${total}
+    <p class="header">Tu Resumen: </p>
+    <p>Marca: ${marca} </p>
+    <p>Año: ${seguro.anio} </p>
+    <p>Tipo: ${seguro.tipo} </p>
+    <p>Total: $ ${total} </p>
   `
-
-  resultado.appendChild(div);
+  const spinner = document.querySelector('#cargando img');
+  spinner.style.display = 'block';
+  setTimeout(() => {
+    spinner.style.display = 'none';
+    resultado.appendChild(div);
+  }, 3000);
 }
 
 
@@ -137,9 +141,17 @@ function enviarDatos(e) {
   //revisar que los campos no estén vacios
   if (marcaSleccionada === '' || anioSeleccionado === '' || tipoSeleccionado === '') {
     //Interfaz, imprime un error
-    interfaz.mostrarError('Faltan datos, revisa el formulario e intenta de nuevo', 'error');
+    interfaz.mostrarMensaje('Faltan datos, revisa el formulario e intenta de nuevo', 'error');
   } else {
     
+    //enviar mesnsaje a interfaz
+    interfaz.mostrarMensaje('Cargando...', 'correcto');
+
+    //Limpiar los items seleccionados
+    const resultados = document.querySelector('#resultado div')
+    if (resultados != null) {
+      resultados.remove();
+    }
     //Instanciar y mostrar interfaz
     const seguro = new Seguro(marcaSleccionada, anioSeleccionado, tipoSeleccionado);
     
