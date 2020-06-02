@@ -22,6 +22,74 @@ const anio = document.getElementById('anio');
 })();
 
 
+//Objetos con sus prototypes
+//Instancia Seguro
+function Seguro(marca, anio, tipo) {
+  this.marca = marca;
+  this.anio = anio;
+  this.tipo = tipo;
+}
+
+Seguro.prototype.cotizarSeguro = function() {
+  /**
+   * 1 = americano 1.15
+   * 2 = asiatico 1.05
+   * 3 = europeo 1.35
+  */
+  let cantidad; 
+  const base = 2000;
+  switch (this.marca) {
+    case '1':
+      cantidad = base * 1.15;
+      break;
+    case '2':
+      cantidad = base * 1.05;
+      break;
+    case '3':
+      cantidad = base * 1.35; 
+      break;
+  }
+
+  //leer el año
+  const diferencia = new Date().getFullYear() - this.anio;
+  
+  //cada año de diferencia se reduce el 3% el vaor del seguro
+  cantidad = cantidad * (1 - (diferencia*.03))
+  
+  /**
+   * Si el seguro es basico se multiplica por 30%
+   * Si el seguro es completo 50% mas
+   */
+  if (this.tipo === 'basico') {
+    cantidad *= 1.30;
+  } else {
+    cantidad *= 1.50;
+  }
+  return cantidad  
+}
+
+//Todo lo que se muestra
+//Instancia interfaz
+function Interfaz() { }
+
+//Mensaje que imprime en el HTML
+Interfaz.prototype.mostrarError = function(mensaje, tipo) {
+  const div = document.createElement('div');
+
+  if (tipo === 'error') {
+    div.classList.add('mensaje', 'error');
+  } else {
+    div.classList.add('mensaje', 'correcto');
+  }
+
+  div.innerHTML = `${mensaje}`;
+  formulario.insertBefore(div, document.querySelector('.form-group'));
+  
+  setTimeout(() => {
+    document.querySelector('.mensaje').remove();
+  }, 3000);
+}
+
 
 //Funciones
 function enviarDatos(e) {
@@ -44,37 +112,12 @@ function enviarDatos(e) {
     //Interfaz, imprime un error
     interfaz.mostrarError('Faltan datos, revisa el formulario e intenta de nuevo', 'error');
   } else {
+    
     //Instanciar y mostrar interfaz
+    const seguro = new Seguro(marcaSleccionada, anioSeleccionado, tipoSeleccionado);
+    
+    //Cotizar el seguro
+    const cantidad = seguro.cotizarSeguro();
+    
   }
-}
-
-
-
-//Constructor para seguro
-function Seguro(marca, anio, tipo) {
-  this.marca = marca;
-  this.anio = anio;
-  this.tipo = tipo;
-}
-
-//Todo lo que se muestra
-function Interfaz() { }
-
-//Mensaje que imprime en el HTML
-
-Interfaz.prototype.mostrarError = function(mensaje, tipo) {
-  const div = document.createElement('div');
-
-  if (tipo === 'error') {
-    div.classList.add('mensaje', 'error');
-  } else {
-    div.classList.add('mensaje', 'correcto');
-  }
-
-  div.innerHTML = `${mensaje}`;
-  formulario.insertBefore(div, document.querySelector('.form-group'));
-  
-  setTimeout(() => {
-    document.querySelector('.mensaje').remove();
-  }, 3000);
 }
